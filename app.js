@@ -18,12 +18,13 @@ const movieHandlers = require("./movieHandlers");
 
 app.get("/api/movies", movieHandlers.getMovies);
 app.get("/api/movies/:id", movieHandlers.getMovieById);
-
 app.post("/api/movies", movieHandlers.postMovie);
-app.post("/api/users", movieHandlers.postusers);
+app.put("/api/movies/:id", movieHandlers.updateMovie);
 
-app.get("/api/users",movieHandlers.getUsers);
-app.get("/api/users/:id",movieHandlers.getUsersById)
+app.get("/api/users", movieHandlers.getUsers);
+app.get("/api/users/:id", movieHandlers.getUsersById);
+app.post("/api/users", movieHandlers.postusers);
+app.put("/api/users/:id", movieHandlers.updateUsers);
 
 app.listen(port, (err) => {
   if (err) {
@@ -32,4 +33,3 @@ app.listen(port, (err) => {
     console.log(`Server is listening on ${port}`);
   }
 });
-
