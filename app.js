@@ -14,7 +14,6 @@ const welcome = (req, res) => {
 
 app.get("/", welcome);
 
-
 const isItDwight = (req, res) => {
   if (
     req.body.email === "dwight@theoffice.com" &&
@@ -26,6 +25,22 @@ const isItDwight = (req, res) => {
   }
 };
 app.post("/api/login", isItDwight);
+
+const { body, validationResult } = require("express-validator");
+const validateUser = [
+  body("email").isEmail(),
+  body("firstname").isLength({ max: 255 }),
+  body("lastname").isLength({ max: 255 }),
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(422).json({ validationErrors: errors.array() });
+    } else {
+      next();
+    }
+  },
+];
 
 const movieHandlers = require("./movieHandlers");
 const { validateMovie } = require("./validators.js");
@@ -45,17 +60,56 @@ app.post(
 );
 
 app.post("/api/movies", verifyToken, validateMovie, movieHandlers.postMovie);
-app.put("/api/movies/:id", verifyToken, movieHandlers.updateMovie);
+app.put(
+  "/api/movies/:id",
+  verifyToken,
+  validateMovie,
+  movieHandlers.updateMovie
+);
 app.delete("/api/movies/:id", verifyToken, movieHandlers.deleteMovie);
 
-
-app.post("/api/users", verifyToken, hashPassword, userHandlers.postUser);
-app.put("/api/users/:id", verifyToken, hashPassword, userHandlers.updateUser);
+app.post(
+  "/api/users",
+  verifyToken,
+  validateUser,
+  hashPassword,
+  userHandlers.postUser
+);
+app.put(
+  "/api/users/:id",
+  verifyToken,
+  validateUser,
+  hashPassword,
+  userHandlers.updateUser
+);
 app.delete("/api/users/:id", verifyToken, userHandlers.deleteUser);
 
+app.post(
+  "/api/users",
+  body("firstname").isLength({ max: 255 }),
+  body("lastname").isLength({ max: 255 }),
+  body("email").isEmail()
+);
+app.put(
+  "/api/users/:id",
+  body("firstname").isLength({ max: 255 }),
+  body("lastname").isLength({ max: 255 }),
+  body("email").isEmail()
+);
 
+app.post(
+  "/api/movies",
+  body("title").isLength({ max: 255 }),
+  body("director").isLength({ max: 255 }),
+  body("year").isLength({ max: 255 })
+);
 
-
+app.put(
+  "/api/movies/:id",
+  body("title").isLength({ max: 255 }),
+  body("director").isLength({ max: 255 }),
+  body("year").isLength({ max: 255 })
+);
 
 app.listen(port, (err) => {
   if (err) {

@@ -23,7 +23,10 @@
     "argon2": "^0.30.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.1",
+    "express-validator": "^6.14.3",
+    "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
+    "loi": "^0.10.0",
     "mysql2": "^3.0.1"
   },
   "devDependencies": {
