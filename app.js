@@ -77,7 +77,7 @@ app.post(
 );
 app.put(
   "/api/users/:id",
-  verifyId
+  verifyId,
   verifyToken,
   validateUser,
   hashPassword,
