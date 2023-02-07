@@ -44,7 +44,7 @@ const validateUser = [
 
 const movieHandlers = require("./movieHandlers");
 const { validateMovie } = require("./validators.js");
-const { hashPassword, verifyPassword, verifyToken } = require("./auth.js");
+const { hashPassword, verifyPassword, verifyToken, verifyId} = require("./auth.js");
 const userHandlers = require("./userHandlers");
 
 app.get("/api/movies", movieHandlers.getMovies);
@@ -77,12 +77,13 @@ app.post(
 );
 app.put(
   "/api/users/:id",
+  verifyId
   verifyToken,
   validateUser,
   hashPassword,
   userHandlers.updateUser
 );
-app.delete("/api/users/:id", verifyToken, userHandlers.deleteUser);
+app.delete("/api/users/:id", verifyId, verifyToken, userHandlers.deleteUser);
 
 app.post(
   "/api/users",
